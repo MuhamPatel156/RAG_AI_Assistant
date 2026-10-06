@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#173e35">
+  <title>Self RAG — Your document, understood</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%23173e35'/%3E%3Cpath d='M12 12h16v16H12z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='m16 20 3 3 6-7' fill='none' stroke='%23fff' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script defer src="/static/app.js"></script>
+</head>
+<body>
+  <svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5v16M3 3h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5v16h-5a4 4 0 0 0-4 2 4 4 0 0 0-4-2H3z"/></symbol>
+  </svg>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Self RAG home"><span class="brand-mark"><svg><use href="#i-book"/></svg></span>Self<span class="brand-light">RAG</span></a>
+    <span class="header-divider"></span><span class="workspace-label">Document workspace</span>
+    <div id="connection" class="connection"><span class="status-dot"></span><span id="connection-text">Connecting…</span></div>
+  </header>
+
+  <main class="workspace">
+    <aside class="sidebar" aria-label="Document controls">
+      <div class="section-heading"><span>Your source</span><span id="source-count" class="count">00</span></div>
+      <p class="sidebar-intro">Good answers start with your context.</p>
+
+      <div id="dropzone" class="dropzone">
+        <span class="upload-icon"><svg class="icon"><use href="#i-upload"/></svg></span>
+        <h2>Bring your document</h2>
+        <p>Drop a PDF here to get started</p>
+        <button id="upload-button" type="button" class="button button-outline" disabled>Choose a PDF <span aria-hidden="true">+</span></button>
+        <input id="file-input" type="file" accept="application/pdf,.pdf" hidden>
+        <span class="file-hint">PDF only · Up to 20 MB</span>
+      </div>
+
+      <section id="document-card" class="document-card" hidden aria-label="Active document">
+        <div class="document-heading"><span class="pdf-icon"><svg class="icon"><use href="#i-file"/></svg></span><span class="pdf-label">PDF DOCUMENT</span></div>
+        <h2 id="document-name"></h2>
+        <p id="document-meta"></p>
+        <div class="document-state"><span id="document-indicator" class="status-dot"></span><span id="document-status" role="status"></span></div>
+        <button id="remove-button" class="text-button" type="button" disabled>Remove document</button>
+      </section>
+
+      <div id="setup-notice" class="notice" hidden role="status"><strong>One-time setup</strong><p id="setup-text"></p><button id="retry-connection" class="text-button" type="button">Check connection again ↻</button></div>
+      <div id="upload-error" class="error-message" role="alert" hidden></div>
+
+      <section class="how-it-works">
+        <span class="eyebrow">A thoughtful answer, in three steps</span>
+        <ol>
+          <li><span class="step-number">1</span><div><h3>Find the right passages</h3><p>Retrieve context from your PDF.</p></div></li>
+          <li><span class="step-number">2</span><div><h3>Read, then reflect</h3><p>Review relevance and answer support.</p></div></li>
+          <li><span class="step-number">3</span><div><h3>Follow the sources</h3><p>See the excerpts and page numbers.</p></div></li>
+        </ol>
+      </section>
+      <div class="sidebar-footer"><span class="small-mark">S/R</span><span>Built on your knowledge.<br>Powered by Self-RAG.</span></div>
+    </aside>
+
+    <section class="main-panel" aria-label="Ask your document">
+      <div class="panel-topline"><span><span class="tiny-dot"></span> A SPACE FOR UNDERSTANDING</span><button id="clear-button" type="button" class="text-button" hidden>Clear conversation</button></div>
+      <div id="empty-state" class="empty-state">
+        <div class="hero-illustration" aria-hidden="true"><div class="paper-back"></div><div class="paper-front"><span></span><span></span><span></span><span></span></div><div class="check-badge"><svg class="icon"><use href="#i-check"/></svg></div><span class="orbit-dot"></span></div>
+        <span class="eyebrow hero-eyebrow">LESS SEARCHING. MORE UNDERSTANDING.</span>
+        <h1>Your documents.<br><em>Clearer answers.</em></h1>
+        <p class="hero-description">Ask a question. Explore an idea. Get a thoughtful answer<br class="desktop-break"> grounded in the pages you provide.</p>
+        <div class="suggestions" aria-label="Suggested questions">
+          <button type="button" class="suggestion" data-question="What is this document about? Give me a concise summary."><svg class="icon"><use href="#i-file"/></svg><span>Find the big picture<small>Summarize this document</small></span><svg class="icon arrow"><use href="#i-arrow"/></svg></button>
+          <button type="button" class="suggestion" data-question="What are the most important takeaways from this document?"><svg class="icon"><use href="#i-spark"/></svg><span>Pull out what matters<small>Explore the key takeaways</small></span><svg class="icon arrow"><use href="#i-arrow"/></svg></button>
+          <button type="button" class="suggestion" data-question="Explain the main concept in this document in simple terms."><svg class="icon"><use href="#i-book"/></svg><span>Make it make sense<small>Explain the main concept</small></span><svg class="icon arrow"><use href="#i-arrow"/></svg></button>
+        </div>
+      </div>
+
+      <div id="conversation" class="conversation" role="log" aria-label="Questions and answers" aria-live="polite" hidden></div>
+
+      <div class="composer-area">
+        <div id="question-error" class="error-message" role="alert" hidden></div>
+        <form id="question-form" class="composer">
+          <label class="sr-only" for="question-input">Your question about the document</label>
+          <textarea id="question-input" rows="2" maxlength="4000" placeholder="What would you like to know?" disabled></textarea>
+          <div class="composer-bottom"><span id="composer-status"><svg class="icon"><use href="#i-file"/></svg><span id="composer-hint">Upload a document to start</span></span><button id="ask-button" type="submit" class="button button-primary" disabled><span>Ask question</span><svg class="icon"><use href="#i-arrow"/></svg></button></div>
+        </form>
+        <p class="composer-footnote">Answers are reviewed by AI and may be imperfect. Check the cited pages.<span>Enter to send · Shift + Enter for a new line</span></p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,74 @@
+# Secrets and local environment settings
+.env
+.env.*
+*.env
+!.env.example
+!.env.*.example
+!*.env.example
+
+# Python virtual environments
+.venv/
+.venv-*/
+venv/
+env/
+ENV/
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.hypothesis/
+
+# Test coverage
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+pytest.xml
+
+# Python build and packaging output
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+pip-wheel-metadata/
+
+# Runtime uploads, local vector indexes, and caches
+.data/
+/uploads/
+/vector_store/
+/faiss_index/
+index.faiss
+index.pkl
+.cache/
+
+# Local sample document; other documentation PDFs remain trackable
+/AI_assignment.pdf
+
+# Logs, temporary files, and local databases
+*.log
+*.tmp
+*.bak
+*.sqlite
+*.sqlite3
+*.db
+/work/
+/outputs/
+
+# Editor and operating-system files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Keep dependency manifests, .env.example, application code, tests,
+# README.md, frontend files, and change/validation reports under version control.
